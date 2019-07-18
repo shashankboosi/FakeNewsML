@@ -1,7 +1,7 @@
 """
 COMP9417
 Assignment
-main.c: Main file for program execution
+main.py: Main file for program execution
 """
 
 import pandas as pd
@@ -19,5 +19,7 @@ if __name__ == "__main__":
 	# assess results of models on validation set
 
 
-	# admin to do:
-	# create virtual environment and requirements.txt file
+	""" ADMIN TO DO:
+		- Email Omar with our project and group members
+		- Ensure everyone understands github branches
+		- Ensure everyone understands virtual environment
