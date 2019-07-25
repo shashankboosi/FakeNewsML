@@ -13,10 +13,6 @@ if __name__ == "__main__":
     df_bodies = pd.read_csv("data/train_bodies.csv")
     df_stances = pd.read_csv("data/train_stances.csv")
 
-
-	df_bodies = pd.read_csv("fakenews_dataset/train_bodies.csv")
-	df_stances = pd.read_csv("fakenews_dataset/train_stances.csv")
-
 	df = pd.merge(df_bodies, df_stances, on="Body ID")
 
 	# print column headings
