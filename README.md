@@ -27,6 +27,9 @@ Summary:
 Share the details of your algorithms here
 '''
 
+(Shashank Boosi) The algorithm that I am going to give a try is Neural Networks.
+
+
 ## Results and Comparisons
 
 
