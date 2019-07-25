@@ -5,10 +5,11 @@ main.py: Main file for program execution
 """
 
 import pandas as pd
+import tensorflow as tf
 
 if __name__ == "__main__":
-    df_bodies = pd.read_csv("fakenews_dataset/train_bodies.csv")
-    df_stances = pd.read_csv("fakenews_dataset/train_stances.csv")
+    df_bodies = pd.read_csv("data/train_bodies.csv")
+    df_stances = pd.read_csv("data/train_stances.csv")
 
     # to do:
     # separate df_bodies and df_stances into train/validate/test
