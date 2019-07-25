@@ -15,7 +15,7 @@ from connors_model import *
 if __name__ == "__main__":
 
 
-	connors_model(df_bodies, df_stances)
+	connors_model()
 	# your_model_goes_here
 
 	print ("\nEnd of tests\n")

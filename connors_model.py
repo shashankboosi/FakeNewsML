@@ -25,7 +25,7 @@ def write_to_csv(filename, heading, content):
 	print (filename, " created")
 
 
-def connors_model(df_bodies, df_stances):
+def connors_model():
 
 	#df_bodies = pd.read_csv("data/train_bodies.csv")
 	#df_stances = pd.read_csv("data/train_stances.csv")
