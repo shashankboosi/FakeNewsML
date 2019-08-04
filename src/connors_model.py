@@ -183,7 +183,7 @@ def check_predictions(predictions, wordcount):
 	true_csv = write_to_csv('output/cm_true_out.csv', heading, true_set)
 
 	# comment xxx
-	print("\nResults:\n")
+	print("\nCM Naive-Bayes Results:\n")
 	report_score(true_csv, test_csv)
 
 
