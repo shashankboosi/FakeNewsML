@@ -2,10 +2,18 @@
 
 Assignment - Fake news
 
-## Introduction
+## Running / Installation
+
+If you are running the code for the first time. Run the following commands in your python console
+
+        -> import nltk
+        -> nltk.download()
+        
+        
+### Introduction
 
 
-## Related Works
+### Related Works
 Each of us should pick up 2 articles of their own choice without conflicts anf add the  summaries of those 
 articles below 
 
@@ -22,7 +30,7 @@ Summary:
 Summary: 
 
 
-## Implementation
+### Implementation
 '''
 Share the details of your algorithms here
 '''
@@ -30,10 +38,10 @@ Share the details of your algorithms here
 (Shashank Boosi) The algorithm that I am going to give a try is Neural Networks.
 
 
-## Results and Comparisons
+### Results and Comparisons
 
 
-## Acknowledgement
+### Acknowledgement
 
 
-## References 
+### References 
