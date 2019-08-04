@@ -9,9 +9,14 @@ The output csvs are then fed into 'scorer.py' using:
 
 `python scorer.py <test file> <model predictions file>`
 
-Each csv should have a 3-column header: Headline, Body ID, Stance. Each following row is a headline, body ID and true or predicted stance
+Each csv should have a 3-column header in row 1:   
+`Headline | Body ID | Stance`  
+Each following row is a headline, body ID and stance: 
+`Trump runs for office | 35 | discuss`  
+`Football is very safe | 97  | agree`   
+` ... `
 
-# Scoring is as follows:
-`  +0.25 for each correct unrelated
-  +0.25 for each correct related (label is any of agree, disagree, discuss)
-  +0.75 for each correct agree, disagree, discuss`
+## Scoring is as follows:
++0.25 for each correct unrelated  
++0.25 for each correct related (label is any of agree, disagree, discuss)  
++0.75 for each correct agree, disagree, discuss
