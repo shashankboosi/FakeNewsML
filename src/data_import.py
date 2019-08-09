@@ -1,7 +1,7 @@
 from csv import DictReader
-
+from collections import OrderedDict
 '''
-This function returns the instances and the article bodies
+This class returns the instances and the article bodies
 Input: The stance path and the body path
 
 Output: 'stance' which is an ordered 2 dimensional dictionary 
@@ -13,12 +13,12 @@ Output: 'stance' which is an ordered 2 dimensional dictionary
 '''
 class FakeNewsData:
 
-    def __init__(self, stancesPath, bodiesPath):
-        self.stancesPath = stancesPath
+    def __init__(self, headlineInstancesPath, bodiesPath):
+        self.headlineInstancesPath = headlineInstancesPath
         self.bodiesPath = bodiesPath
-        self.stances = self.read(self.stancesPath)
+        self.headlineInstances = self.read(self.headlineInstancesPath)
         bodies = self.read(self.bodiesPath)
-        self.articleBody = {}
+        self.articleBody = OrderedDict()
 
         for body in bodies:
             self.articleBody[int(body['Body ID'])] = body['articleBody']
