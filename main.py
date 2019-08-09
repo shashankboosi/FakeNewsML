@@ -8,6 +8,7 @@ main.py: Main file for program execution
 from src.connors_model import *
 from src.data_import import FakeNewsData
 from src.train_validation_split import DataSplit
+from src.preprocess import Preprocess
 import random
 
 # Global Variables
@@ -45,20 +46,21 @@ if __name__ == "__main__":
     ids = list(train.articleBody.keys())
 
     # The DataSplit generates the train and validation splits according to our split size
-    train_validation_split = DataSplit(ids=ids, headline=train.headlineInstances, body=train.articleBody,
-                                       split_size=0.8)
+    print("Data Splitting")
+    train_validation_split = DataSplit(ids=ids, headline=train.headlineInstances, split_size=0.8)
     train_stances, validation_stances = train_validation_split.split()
     print(train_stances[0])
 
+    # Preprocess the train, validation and test
+    print("Start of pre-processing for train")
+    preprocessed_train_data = Preprocess(headline=train_stances[:100], body=train.articleBody, preprocess_type="lemma")
+    train_headlines, train_bodies = preprocessed_train_data.get_clean_headlines_and_bodies()
+    print(train_headlines[0])
+    print(train_bodies[0])
+
+    # Choosing the type of trimming for the words
 
     # connors_model()
 # your_model_goes_here
 
 print("\nEnd of tests\n")
-
-""" 
-To do:
-- Add your own model implementation to this mainfile by calling it from another file
-- Document your research into your selected model for text classification
-- ?
-"""
