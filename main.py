@@ -8,6 +8,7 @@ main.py: Main file for program execution
 from src.connors_model import *
 from src.data_import import FakeNewsData
 from src.train_validation_split import DataSplit
+from src.feature_transformation import Features
 import random
 
 # Global Variables
@@ -49,7 +50,6 @@ if __name__ == "__main__":
                                        split_size=0.8)
     train_stances, validation_stances = train_validation_split.split()
     print(train_stances[0])
-
 
     # connors_model()
 # your_model_goes_here
