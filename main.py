@@ -11,6 +11,8 @@ from src.train_validation_split import DataSplit
 from src.preprocess import Preprocess
 from src.feature_extraction import Features
 from src.utils import input_file
+from src.models import Models
+from output.scorer import LABELS
 from src.utils import output_file
 import scipy.sparse as sp
 import os
@@ -23,18 +25,26 @@ testBodyPath = "data/competition_test_bodies.csv"
 
 # header attributes
 primary_id = "Body ID"
-stance = "stance"
+stance = "Stance"
 body = "articleBody"
 headline = "Headline"
 base_path = "preprocessed_data"
+
+
+def target_labels(stances):
+    labels = []
+    for i in range(len(stances)):
+        labels.append(LABELS.index(stances[i][stance]))
+
+    return labels
 
 
 def headlines_bodies(temp_headline, temp_body):
     headlines = []
     bodies = []
     for i in range(len(temp_headline)):
-        bodies.append(temp_body[int(temp_headline[i]['Body ID'])])
-        headlines.append(temp_headline[i]['Headline'])
+        bodies.append(temp_body[int(temp_headline[i][primary_id])])
+        headlines.append(temp_headline[i][headline])
 
     return headlines, bodies
 
@@ -143,6 +153,12 @@ if __name__ == "__main__":
         [validation_tfidf_weights, validation_sentence_weights.T, validation_cos_sim_weights])
     final_test_features = sp.hstack([test_tfidf_weights, test_sentence_weights.T, test_cos_sim_weights])
     print(final_train_features.shape)
+
+    # Target variables
+    train_target_labels = target_labels(train_stances)
+    validation_target_labels = target_labels(validation_stances)
+    test_target_labels = target_labels(test.headlineInstances)
+    print(train_target_labels)
 
     # Modelling the features
 
