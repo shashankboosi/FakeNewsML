@@ -22,3 +22,24 @@ class Features:
 
         return weight_features
 
+    def tfidf_extraction(self, validation_headlines, validation_bodies, test_headlines, test_bodies):
+        tf_headline_vectorizer = TfidfVectorizer(ngram_range=(1, 3), stop_words="english", lowercase=True,
+                                                 max_features=5000)
+        tf_train_headline = tf_headline_vectorizer.fit_transform(self.headline)
+
+        tf_body_vectorizer = TfidfVectorizer(ngram_range=(1, 3), stop_words="english", lowercase=True,
+                                             max_features=5000)
+        tf_train_body = tf_body_vectorizer.fit_transform(self.body)
+
+        tf_validation_headline = tf_headline_vectorizer.transform(validation_headlines)
+        tf_validation_body = tf_body_vectorizer.transform(validation_bodies)
+
+        tf_test_headline = tf_headline_vectorizer.transform(test_headlines)
+        tf_test_body = tf_body_vectorizer.transform(test_bodies)
+
+        train_tfidf = sp.hstack([tf_train_headline, tf_train_body])
+        validation_tfidf = sp.hstack([tf_validation_headline, tf_validation_body])
+        test_tfidf = sp.hstack([tf_test_headline, tf_test_body])
+
+        return train_tfidf, validation_tfidf, test_tfidf
+
