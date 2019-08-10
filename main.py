@@ -55,7 +55,7 @@ if __name__ == "__main__":
     train_stances, validation_stances = train_validation_split.split()
     print(train_stances[0])
 
-    # Preprocess the train, validation and test
+    # Preprocess the train
     print("Start of pre-processing for train")
     if not (os.path.exists(base_path + "/" + "training_headlines.p") and os.path.exists(
             base_path + "/" + "training_bodies.p")):
@@ -71,6 +71,43 @@ if __name__ == "__main__":
         train_bodies = input_file(base_path + "/" + "training_bodies.p")
         print(train_headlines[0])
         print(train_bodies[0])
+
+    # Preprocess the validation
+    print("Start of pre-processing for validation")
+    if not (os.path.exists(base_path + "/" + "validation_headlines.p") and os.path.exists(
+            base_path + "/" + "validation_bodies.p")):
+        preprocessed_train_data = Preprocess(headline=validation_stances[:100], body=train.articleBody,
+                                             preprocess_type="lemma")
+        validation_headlines, validation_bodies = preprocessed_train_data.get_clean_headlines_and_bodies()
+        print(validation_headlines[0])
+        print(validation_bodies[0])
+        output_file(validation_headlines, base_path + "/" + "validation_headlines.p")
+        output_file(validation_bodies, base_path + "/" + "validation_bodies.p")
+    else:
+        validation_headlines = input_file(base_path + "/" + "validation_headlines.p")
+        validation_bodies = input_file(base_path + "/" + "validation_bodies.p")
+        print(validation_headlines[0])
+        print(validation_bodies[0])
+
+
+    # Preprocess the test
+    print("Start of pre-processing for test")
+    if not (os.path.exists(base_path + "/" + "test_headlines.p") and os.path.exists(
+            base_path + "/" + "test_bodies.p")):
+        preprocessed_train_data = Preprocess(headline=test.headlineInstances[:100], body=test.articleBody,
+                                             preprocess_type="lemma")
+        test_headlines, test_bodies = preprocessed_train_data.get_clean_headlines_and_bodies()
+        print(test_headlines[0])
+        print(test_bodies[0])
+        output_file(test_headlines, base_path + "/" + "test_headlines.p")
+        output_file(test_bodies, base_path + "/" + "test_bodies.p")
+    else:
+        test_headlines = input_file(base_path + "/" + "test_headlines.p")
+        test_bodies = input_file(base_path + "/" + "test_bodies.p")
+        print(test_headlines[0])
+        print(test_bodies[0])
+
+    print()
 
 
 

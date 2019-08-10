@@ -85,7 +85,6 @@ class Preprocess:
             return words
 
         for i in range(len(self.headline)):
-            print(int(self.headline[i]['Body ID']))
             bodies.append(clean(self.body[int(self.headline[i]['Body ID'])]))
             headlines.append(clean(self.headline[i]['Headline']))
 
