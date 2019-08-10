@@ -4,6 +4,8 @@ from sklearn.tree import DecisionTreeClassifier
 from sklearn.svm import SVC
 from sklearn.naive_bayes import MultinomialNB
 from sklearn.ensemble import RandomForestClassifier
+import src.metrics as metrics
+import math
 
 '''
 
@@ -52,6 +54,16 @@ class Models:
         null_score, max_score = score_defaults(actual_test_labels)
         print("Percentage of test score for Logistic Regression is:", test_score / float(max_score))
 
+        precision, recall = metrics.precision_and_recall(validation_confusion_matrix)
+        f1 = metrics.f1_score(precision, recall)
+
+        print("Precision for LR: ", precision)
+        print("Recall for LR:", recall)
+        print("F1 Score for LR:", f1)
+
+        print(f1)
+
+
     def get_dt(self):
         pass
 
@@ -59,7 +71,43 @@ class Models:
         pass
 
     def get_nb(self):
-        pass
+        nb = MultinomialNB(alpha=0.01, class_prior=None, fit_prior=True)
+
+        nb.fit(self.X_train, self.Y_train)
+
+        # Validation results
+        Y_val_pred = nb.predict(self.X_validate)
+        predicted_validation_labels = [LABELS[int(pred)] for pred in Y_val_pred]
+        actual_validation_labels = [LABELS[int(pred)] for pred in self.Y_validate]
+        print(actual_validation_labels)
+
+        validation_score, validation_confusion_matrix = score_submission(actual_validation_labels,
+                                                                         predicted_validation_labels)
+        print_confusion_matrix(validation_confusion_matrix)
+
+        null_score, max_score = score_defaults(actual_validation_labels)
+        print("Percentage of validation score for Naive Bayes is:", validation_score / float(max_score))
+
+        # Test results
+        Y_test_pred = nb.predict(self.X_test)
+        predicted_test_labels = [LABELS[int(pred)] for pred in Y_test_pred]
+        actual_test_labels = [LABELS[int(pred)] for pred in self.Y_test]
+
+        test_score, test_confusion_matrix = score_submission(actual_test_labels, predicted_test_labels)
+        print_confusion_matrix(test_confusion_matrix)
+        null_score, max_score = score_defaults(actual_test_labels)
+        print("Percentage of test score for Logistic Regression is:", test_score / float(max_score))
+
+        precision, recall = metrics.precision_and_recall(validation_confusion_matrix)
+        f1 = metrics.f1_score(precision, recall)
+
+        print("Precision for NB: ", precision)
+        print("Recall for NB:", recall)
+        print("F1 Score for NB:", f1)
+
+        print(f1)
+
+
 
     def get_rf(self):
         pass
