@@ -6,10 +6,18 @@ Assignment - Fake news
 
 If you are running the code for the first time. Run the following commands in your python console
 
+1) 
+
         -> import nltk
         -> nltk.download()
         
+2) Install contractions library which is used in the pre-processing part
+
+        -> pip install contractions==0.0.18
         
+3) All the other libraries will come along with anaconda.
+
+ 
 ### Introduction
 
 

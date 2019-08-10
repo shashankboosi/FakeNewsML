@@ -1,9 +1,8 @@
 class DataSplit:
 
-    def __init__(self, ids, headline, body, split_size=0.8):
+    def __init__(self, ids, headline, split_size=0.8):
         self.ids = ids
         self.headline = headline
-        self.body = body
         self.training_split_size = split_size
 
     def split(self):
