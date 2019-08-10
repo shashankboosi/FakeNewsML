@@ -102,6 +102,17 @@ if __name__ == "__main__":
     validation_headlines, validation_bodies = headlines_bodies(validation_stances, train.articleBody)
     test_headlines, test_bodies = headlines_bodies(test.headlineInstances, test.articleBody)
 
+    # Feature extraction and combining them for the models
+    print("Feature extraction for train")
+    train_features = Features(train_preprocessed_headlines, train_preprocessed_bodies, train_headlines, train_bodies)
+    train_sentence_weights = train_features.sentence_weighting()
+    print(train_sentence_weights)
+    train_tfidf_weights, validation_tfidf_weights, test_tfidf_weights = train_features.tfidf_extraction(
+        validation_headlines, validation_bodies, test_headlines,
+        test_bodies)
+    print(train_tfidf_weights.shape)
+    train_cos_sim_weights = train_features.cosine_sim(train_tfidf_weights)
+    print(train_cos_sim_weights)
 
     # connors_model()
     # your_model_goes_here
