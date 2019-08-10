@@ -10,9 +10,11 @@ from src.data_import import FakeNewsData
 from src.train_validation_split import DataSplit
 from src.preprocess import Preprocess
 from src.feature_extraction import Features
-from src.utils import input_file
-from src.utils import output_file
+from src.models import Models
+from src.score import LABELS
+from src.utils import input_file, output_file
 import scipy.sparse as sp
+from sklearn.metrics import accuracy_score
 import os
 
 # Global Variables
@@ -23,18 +25,26 @@ testBodyPath = "data/competition_test_bodies.csv"
 
 # header attributes
 primary_id = "Body ID"
-stance = "stance"
+stance = "Stance"
 body = "articleBody"
 headline = "Headline"
 base_path = "preprocessed_data"
+
+
+def target_labels(stances):
+    labels = []
+    for i in range(len(stances)):
+        labels.append(LABELS.index(stances[i][stance]))
+
+    return labels
 
 
 def headlines_bodies(temp_headline, temp_body):
     headlines = []
     bodies = []
     for i in range(len(temp_headline)):
-        bodies.append(temp_body[int(temp_headline[i]['Body ID'])])
-        headlines.append(temp_headline[i]['Headline'])
+        bodies.append(temp_body[int(temp_headline[i][primary_id])])
+        headlines.append(temp_headline[i][headline])
 
     return headlines, bodies
 
@@ -57,15 +67,12 @@ if __name__ == "__main__":
     print("Data Splitting")
     train_validation_split = DataSplit(ids=ids, headline=train.headlineInstances, split_size=0.8)
     train_stances, validation_stances = train_validation_split.split()
-    train_stances = train_stances[:100]
-    validation_stances = validation_stances[:100]
-    test.headlineInstances = test.headlineInstances[:100]
 
     # Preprocess the train
     print("Start of pre-processing for train")
     if not (os.path.exists(base_path + "/" + "training_headlines.p") and os.path.exists(
             base_path + "/" + "training_bodies.p")):
-        preprocessed_train_data = Preprocess(headline=train_stances[:100], body=train.articleBody,
+        preprocessed_train_data = Preprocess(headline=train_stances, body=train.articleBody,
                                              preprocess_type="lemma")
         train_preprocessed_headlines, train_preprocessed_bodies = preprocessed_train_data.get_clean_headlines_and_bodies()
         output_file(train_preprocessed_headlines, base_path + "/" + "training_headlines.p")
@@ -78,7 +85,7 @@ if __name__ == "__main__":
     print("Start of pre-processing for validation")
     if not (os.path.exists(base_path + "/" + "validation_headlines.p") and os.path.exists(
             base_path + "/" + "validation_bodies.p")):
-        preprocessed_validation_data = Preprocess(headline=validation_stances[:100], body=train.articleBody,
+        preprocessed_validation_data = Preprocess(headline=validation_stances, body=train.articleBody,
                                                   preprocess_type="lemma")
         validation_preprocessed_headlines, validation_preprocessed_bodies = preprocessed_validation_data.get_clean_headlines_and_bodies()
         output_file(validation_preprocessed_headlines, base_path + "/" + "validation_headlines.p")
@@ -91,7 +98,7 @@ if __name__ == "__main__":
     print("Start of pre-processing for test")
     if not (os.path.exists(base_path + "/" + "test_headlines.p") and os.path.exists(
             base_path + "/" + "test_bodies.p")):
-        preprocessed_test_data = Preprocess(headline=test.headlineInstances[:100], body=test.articleBody,
+        preprocessed_test_data = Preprocess(headline=test.headlineInstances, body=test.articleBody,
                                             preprocess_type="lemma")
         test_preprocessed_headlines, test_preprocessed_bodies = preprocessed_test_data.get_clean_headlines_and_bodies()
         output_file(test_preprocessed_headlines, base_path + "/" + "test_headlines.p")
@@ -138,15 +145,25 @@ if __name__ == "__main__":
     test_cos_sim_weights = test_features.cosine_sim(test_tfidf_weights)
 
     # Combine the features to prepare them as an inout for the models
-    final_train_features = sp.hstack([train_tfidf_weights, train_sentence_weights.T, train_cos_sim_weights])
+    final_train_features = sp.hstack([train_tfidf_weights, train_sentence_weights.T, train_cos_sim_weights]).A
     final_validation_features = sp.hstack(
-        [validation_tfidf_weights, validation_sentence_weights.T, validation_cos_sim_weights])
-    final_test_features = sp.hstack([test_tfidf_weights, test_sentence_weights.T, test_cos_sim_weights])
+        [validation_tfidf_weights, validation_sentence_weights.T, validation_cos_sim_weights]).A
+    final_test_features = sp.hstack([test_tfidf_weights, test_sentence_weights.T, test_cos_sim_weights]).A
     print(final_train_features.shape)
 
+    # Target variables
+    train_target_labels = target_labels(train_stances)
+    validation_target_labels = target_labels(validation_stances)
+    test_target_labels = target_labels(test.headlineInstances)
+
     # Modelling the features
+    models = Models(final_train_features, final_validation_features, final_test_features, train_target_labels,
+                    validation_target_labels, test_target_labels)
+
+    models.get_lr()
 
     # connors_model()
     # your_model_goes_here
 
     print("\nEnd of tests\n")
+
