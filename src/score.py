@@ -80,7 +80,7 @@ def score_defaults(gold_labels):
     :param gold_labels: list containing the true labels
     :return: (null_score, best_score)
     """
-    unrelated = [g for g in gold_labels if g['Stance'] == 'unrelated']
+    unrelated = [g for g in gold_labels if g == 'unrelated']
     null_score = 0.25 * len(unrelated)
     max_score = null_score + (len(gold_labels) - len(unrelated))
     return null_score, max_score
