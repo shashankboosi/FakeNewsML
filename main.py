@@ -9,7 +9,10 @@ from src.connors_model import *
 from src.data_import import FakeNewsData
 from src.train_validation_split import DataSplit
 from src.preprocess import Preprocess
-import random
+from src.feature_transformation import Features
+from src.utils import input_file
+from src.utils import output_file
+import os
 
 # Global Variables
 trainStancePath = "data/train_stances.csv"
@@ -22,6 +25,7 @@ primary_id = "Body ID"
 stance = "stance"
 body = "articleBody"
 headline = "Headline"
+base_path = "preprocessed_data"
 
 '''
 The main function should call the classes that we declare and
@@ -53,14 +57,27 @@ if __name__ == "__main__":
 
     # Preprocess the train, validation and test
     print("Start of pre-processing for train")
-    preprocessed_train_data = Preprocess(headline=train_stances[:100], body=train.articleBody, preprocess_type="lemma")
-    train_headlines, train_bodies = preprocessed_train_data.get_clean_headlines_and_bodies()
-    print(train_headlines[0])
-    print(train_bodies[0])
+    if not (os.path.exists(base_path + "/" + "training_headlines.p") and os.path.exists(
+            base_path + "/" + "training_bodies.p")):
+        preprocessed_train_data = Preprocess(headline=train_stances[:100], body=train.articleBody,
+                                             preprocess_type="lemma")
+        train_headlines, train_bodies = preprocessed_train_data.get_clean_headlines_and_bodies()
+        print(train_headlines[0])
+        print(train_bodies[0])
+        output_file(train_headlines, base_path + "/" + "training_headlines.p")
+        output_file(train_bodies, base_path + "/" + "training_bodies.p")
+    else:
+        train_headlines = input_file(base_path + "/" + "training_headlines.p")
+        train_bodies = input_file(base_path + "/" + "training_bodies.p")
+        print(train_headlines[0])
+        print(train_bodies[0])
+
+
+
 
     # Choosing the type of trimming for the words
 
     # connors_model()
-# your_model_goes_here
+    # your_model_goes_here
 
-print("\nEnd of tests\n")
+    print("\nEnd of tests\n")
