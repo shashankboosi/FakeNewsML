@@ -97,6 +97,11 @@ if __name__ == "__main__":
         test_preprocessed_headlines = input_file(base_path + "/" + "test_headlines.p")
         test_preprocessed_bodies = input_file(base_path + "/" + "test_bodies.p")
 
+    # Split headlines and bodies for train, validation and test
+    train_headlines, train_bodies = headlines_bodies(train_stances, train.articleBody)
+    validation_headlines, validation_bodies = headlines_bodies(validation_stances, train.articleBody)
+    test_headlines, test_bodies = headlines_bodies(test.headlineInstances, test.articleBody)
+
 
     # connors_model()
     # your_model_goes_here
