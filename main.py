@@ -12,6 +12,7 @@ from src.preprocess import Preprocess
 from src.feature_extraction import Features
 from src.utils import input_file
 from src.utils import output_file
+import scipy.sparse as sp
 import os
 
 # Global Variables
@@ -56,7 +57,9 @@ if __name__ == "__main__":
     print("Data Splitting")
     train_validation_split = DataSplit(ids=ids, headline=train.headlineInstances, split_size=0.8)
     train_stances, validation_stances = train_validation_split.split()
-
+    train_stances = train_stances[:100]
+    validation_stances = validation_stances[:100]
+    test.headlineInstances = test.headlineInstances[:100]
 
     # Preprocess the train
     print("Start of pre-processing for train")
@@ -105,14 +108,43 @@ if __name__ == "__main__":
     # Feature extraction and combining them for the models
     print("Feature extraction for train")
     train_features = Features(train_preprocessed_headlines, train_preprocessed_bodies, train_headlines, train_bodies)
-    train_sentence_weights = train_features.sentence_weighting()
-    print(train_sentence_weights)
+
+    # TF-IDF weight extraction
     train_tfidf_weights, validation_tfidf_weights, test_tfidf_weights = train_features.tfidf_extraction(
-        validation_headlines, validation_bodies, test_headlines,
-        test_bodies)
+        validation_headlines, validation_bodies, test_headlines, test_bodies)
     print(train_tfidf_weights.shape)
-    train_cos_sim_weights = train_features.cosine_sim(train_tfidf_weights)
-    print(train_cos_sim_weights)
+
+    # Sentence weighting for train
+    train_sentence_weights = train_features.sentence_weighting()
+    print(train_sentence_weights.shape)
+    # Cosine Similarity for train
+    train_cos_sim_weights = train_features.cosine_sim(train_tfidf_weights.toarray())
+    print(train_cos_sim_weights.shape)
+
+    print("Feature extraction for validation")
+    validation_features = Features(validation_preprocessed_headlines, validation_preprocessed_bodies,
+                                   validation_headlines, validation_bodies)
+    # Sentence weighting for validation
+    validation_sentence_weights = validation_features.sentence_weighting()
+    # Cosine Similarity for validation
+    validation_cos_sim_weights = validation_features.cosine_sim(validation_tfidf_weights)
+
+    print("Feature extraction for test")
+    test_features = Features(test_preprocessed_headlines, test_preprocessed_bodies,
+                             test_headlines, test_bodies)
+    # Sentence weighting for test
+    test_sentence_weights = test_features.sentence_weighting()
+    # Cosine Similarity for test
+    test_cos_sim_weights = test_features.cosine_sim(test_tfidf_weights)
+
+    # Combine the features to prepare them as an inout for the models
+    final_train_features = sp.hstack([train_tfidf_weights, train_sentence_weights.T, train_cos_sim_weights])
+    final_validation_features = sp.hstack(
+        [validation_tfidf_weights, validation_sentence_weights.T, validation_cos_sim_weights])
+    final_test_features = sp.hstack([test_tfidf_weights, test_sentence_weights.T, test_cos_sim_weights])
+    print(final_train_features.shape)
+
+    # Modelling the features
 
     # connors_model()
     # your_model_goes_here
