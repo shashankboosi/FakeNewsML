@@ -16,6 +16,7 @@ from src.utils import input_file, output_file
 import scipy.sparse as sp
 from sklearn.metrics import accuracy_score
 import os
+import time
 
 # Global Variables
 trainStancePath = "data/train_stances.csv"
@@ -67,6 +68,9 @@ if __name__ == "__main__":
     print("Data Splitting")
     train_validation_split = DataSplit(ids=ids, headline=train.headlineInstances, split_size=0.8)
     train_stances, validation_stances = train_validation_split.split()
+    train_stances = train_stances[:10000]
+    validation_stances = validation_stances[:]
+    test.headlineInstances = test.headlineInstances[:10000]
 
     # Preprocess the train
     print("Start of pre-processing for train")
@@ -107,6 +111,7 @@ if __name__ == "__main__":
         test_preprocessed_headlines = input_file(base_path + "/" + "test_headlines.p")
         test_preprocessed_bodies = input_file(base_path + "/" + "test_bodies.p")
 
+    t0= time.time()
     # Split headlines and bodies for train, validation and test
     train_headlines, train_bodies = headlines_bodies(train_stances, train.articleBody)
     validation_headlines, validation_bodies = headlines_bodies(validation_stances, train.articleBody)
@@ -114,7 +119,7 @@ if __name__ == "__main__":
 
     # Feature extraction and combining them for the models
     print("Feature extraction for train")
-    train_features = Features(train_preprocessed_headlines, train_preprocessed_bodies, train_headlines, train_bodies)
+    train_features = Features(train_preprocessed_headlines[:10000], train_preprocessed_bodies[:10000], train_headlines, train_bodies)
 
     # TF-IDF weight extraction
     train_tfidf_weights, validation_tfidf_weights, test_tfidf_weights = train_features.tfidf_extraction(
@@ -129,7 +134,7 @@ if __name__ == "__main__":
     print(train_cos_sim_weights.shape)
 
     print("Feature extraction for validation")
-    validation_features = Features(validation_preprocessed_headlines, validation_preprocessed_bodies,
+    validation_features = Features(validation_preprocessed_headlines[:], validation_preprocessed_bodies[:],
                                    validation_headlines, validation_bodies)
     # Sentence weighting for validation
     validation_sentence_weights = validation_features.sentence_weighting()
@@ -137,7 +142,7 @@ if __name__ == "__main__":
     validation_cos_sim_weights = validation_features.cosine_sim(validation_tfidf_weights)
 
     print("Feature extraction for test")
-    test_features = Features(test_preprocessed_headlines, test_preprocessed_bodies,
+    test_features = Features(test_preprocessed_headlines[:10000], test_preprocessed_bodies[:10000],
                              test_headlines, test_bodies)
     # Sentence weighting for test
     test_sentence_weights = test_features.sentence_weighting()
@@ -146,10 +151,17 @@ if __name__ == "__main__":
 
     # Combine the features to prepare them as an inout for the models
     final_train_features = sp.hstack([train_tfidf_weights, train_sentence_weights.T, train_cos_sim_weights]).A
+    output_file()
     final_validation_features = sp.hstack(
         [validation_tfidf_weights, validation_sentence_weights.T, validation_cos_sim_weights]).A
     final_test_features = sp.hstack([test_tfidf_weights, test_sentence_weights.T, test_cos_sim_weights]).A
     print(final_train_features.shape)
+
+
+
+    t1 = time.time()
+
+    print("Time for feature extraction is:", t1 - t0)
 
     # Target variables
     train_target_labels = target_labels(train_stances)
@@ -157,10 +169,14 @@ if __name__ == "__main__":
     test_target_labels = target_labels(test.headlineInstances)
 
     # Modelling the features
-    models = Models(final_train_features, final_validation_features, final_test_features, train_target_labels,
-                    validation_target_labels, test_target_labels)
+    print("Start of Modelling")
+    models = Models(final_train_features, final_validation_features, final_test_features, train_target_labels[:10000],
+                    validation_target_labels[:], test_target_labels[:10000])
 
     models.get_lr()
+
+    t2 = time.time()
+    print("Time for the total is:", t2 - t0)
 
     # connors_model()
     # your_model_goes_here
