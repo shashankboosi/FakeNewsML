@@ -42,22 +42,18 @@ train and 20 % validation to check the results before testing them on the test d
 6) `metrics.py` -  We use different performance metrics like `Competition Score`, `Accuracy`, `Precision`,
 `Recall`, `F1-score` to evaluate our labels.
 
+7) `score.py` - This is the official scorer python file that is to be
+used, to evaluate the results.
+
 
         
 ### Results and Comparisons
 
-Percentage of correctness for different stances for all the 5 algorithms we compare with:
+1) Percentage of correctness for different stances for all the 5 algorithms we compare with:
 ![correctness](images/correctness.png)
     
-The accuracy - score chart for the dataset is: 
-<img width="446" alt="acctoscore" src="https://user-images.githubusercontent.com/13752557/62832616-66e4a700-bc74-11e9-8035-1ed00b70ef2f.PNG">
+2) The accuracy - score chart for the dataset is: 
+![accuracy-score](images/acctoscore.png)
 
-
-
-### Results and Comparisons
-
-
-### Acknowledgement
-
-
-### References 
+### Report
+For detailed information about the repository please find the pdf attached in `report/report.pdf`
