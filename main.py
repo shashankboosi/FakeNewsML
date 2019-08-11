@@ -119,11 +119,13 @@ if __name__ == "__main__":
     test_headlines, test_bodies = headlines_bodies(test.headlineInstances, test.articleBody)
 
     if not (os.path.exists(base_feature_path + "/" + "final_features.p") and os.path.exists(
-            base_feature_path + "/" + "validation_features.p") and os.path.exists(base_feature_path + "/" + "test_features.p")):
+            base_feature_path + "/" + "validation_features.p") and os.path.exists(
+        base_feature_path + "/" + "test_features.p")):
 
         # Feature extraction and combining them for the models
         print("Feature extraction for train")
-        train_features = Features(train_preprocessed_headlines[:1000], train_preprocessed_bodies[:1000], train_headlines,
+        train_features = Features(train_preprocessed_headlines[:1000], train_preprocessed_bodies[:1000],
+                                  train_headlines,
                                   train_bodies)
 
         # TF-IDF weight extraction
@@ -132,32 +134,26 @@ if __name__ == "__main__":
 
         # Sentence weighting for train
         train_sentence_weights = train_features.sentence_weighting()
-        # Cosine Similarity for train
-        train_cos_sim_weights = train_features.cosine_sim(train_tfidf_weights.toarray())
 
         print("Feature extraction for validation")
         validation_features = Features(validation_preprocessed_headlines[:1000], validation_preprocessed_bodies[:1000],
                                        validation_headlines, validation_bodies)
         # Sentence weighting for validation
         validation_sentence_weights = validation_features.sentence_weighting()
-        # Cosine Similarity for validation
-        validation_cos_sim_weights = validation_features.cosine_sim(validation_tfidf_weights)
 
         print("Feature extraction for test")
         test_features = Features(test_preprocessed_headlines[:1000], test_preprocessed_bodies[:1000],
                                  test_headlines, test_bodies)
         # Sentence weighting for test
         test_sentence_weights = test_features.sentence_weighting()
-        # Cosine Similarity for test
-        test_cos_sim_weights = test_features.cosine_sim(test_tfidf_weights)
 
         # Combine the features to prepare them as an inout for the models
-        final_train_features = sp.hstack([train_tfidf_weights, train_sentence_weights.T, train_cos_sim_weights]).A
+        final_train_features = sp.hstack([train_tfidf_weights, train_sentence_weights.T]).A
         output_file(final_train_features, base_feature_path + "/" + "train_features.p")
         final_validation_features = sp.hstack(
-            [validation_tfidf_weights, validation_sentence_weights.T, validation_cos_sim_weights]).A
+            [validation_tfidf_weights, validation_sentence_weights.T]).A
         output_file(final_validation_features, base_feature_path + "/" + "validation_features.p")
-        final_test_features = sp.hstack([test_tfidf_weights, test_sentence_weights.T, test_cos_sim_weights]).A
+        final_test_features = sp.hstack([test_tfidf_weights, test_sentence_weights.T]).A
         output_file(final_test_features, base_feature_path + "/" + "test_features.p")
         print(final_train_features.shape)
     else:
@@ -180,10 +176,10 @@ if __name__ == "__main__":
     models = Models(final_train_features, final_validation_features, final_test_features, train_target_labels[:1000],
                     validation_target_labels[:1000], test_target_labels[:1000])
 
-    # models.get_lr()
-    # models.get_dt()
-    # models.get_nb()
-    # models.get_rf()
+    models.get_lr()
+    models.get_dt()
+    models.get_nb()
+    models.get_rf()
     models.get_svm()
 
     t2 = time.time()
