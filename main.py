@@ -15,7 +15,6 @@ from src.score import LABELS
 from src.utils import input_file, output_file
 import scipy.sparse as sp
 from src.utils import read_from_csv
-import numpy as np
 
 import os
 import time
