@@ -1,3 +1,7 @@
+'''
+This file splits the train_stances into 80% train and 20% validation.
+'''
+
 class DataSplit:
 
     def __init__(self, ids, headline, split_size=0.8):
