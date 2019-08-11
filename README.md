@@ -47,10 +47,10 @@ train and 20 % validation to check the results before testing them on the test d
 ### Results and Comparisons
 
 Percentage of correctness for different stances for all the 5 algorithms we compare with:
-    ![alt text](https://github.com/shashankboosi/9417_MachineLearning/tree/master/images/correctness.jpeg "Percentage Correctness")
+![correctness](https://user-images.githubusercontent.com/13752557/62832625-9a273600-bc74-11e9-8c04-8ece0613cf3e.png)
     
 The accuracy - score chart for the dataset is: 
-    ![alt text](https://github.com/adam-p/markdown-here/raw/master/src/common/images/icon48.png "Accuracy - Score")
+<img width="446" alt="acctoscore" src="https://user-images.githubusercontent.com/13752557/62832616-66e4a700-bc74-11e9-8035-1ed00b70ef2f.PNG">
 
 
 
