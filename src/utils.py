@@ -13,23 +13,6 @@ def input_file(filename):
     return pickle.load(f)
 
 
-def write_to_csv(filename, heading, content):
-    """
-    Function to write desired output to csv file
-    :param filename: the name of the file
-    :param heading: a Python list of the headers for the csv ['Headline','Body ID','Stance']
-    :param content: a Python list of lists where each list has the same structure as the header
-    :return: created csv filepath
-    """
-    with open(filename, mode='w') as file:
-        csv_writer = csv.writer(file)
-        csv_writer.writerow(heading)
-        for row in content:
-            csv_writer.writerow(row)
-    print(filename, " created")
-    return filename
-
-
 def count_stances(data):
     agree = 0
     disagree = 0
