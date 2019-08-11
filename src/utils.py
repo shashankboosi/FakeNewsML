@@ -1,6 +1,9 @@
 import pickle
 import csv
 
+'''
+This file contains functions which help proceed with the project
+'''
 
 def output_file(obj, filename):
     f = open(filename, 'wb')

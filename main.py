@@ -5,7 +5,6 @@ Authors: Connor McLeod (z5058240), Shashank Reddy (z5222766), Leonard Lee(z51739
 main.py: Main file for program execution
 """
 
-from src.connors_model import *
 from src.data_import import FakeNewsData
 from src.train_validation_split import DataSplit
 from src.preprocess import Preprocess
