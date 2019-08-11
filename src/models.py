@@ -1,7 +1,6 @@
 from sklearn.linear_model import LogisticRegression
 from src.score import LABELS, score_submission, print_confusion_matrix, score_defaults
 from sklearn.tree import DecisionTreeClassifier
-from sklearn.neighbors import KNeighborsClassifier
 from sklearn.naive_bayes import MultinomialNB
 from sklearn.ensemble import RandomForestClassifier
 import src.metrics as metrics
@@ -12,10 +11,10 @@ from src.utils import write_to_csv
 output = "output"
 
 '''
+This file consists of the ML models that are designed for the fake news challenge
+Input: The train, validate and test data
 
-Input:
-
-Output:
+Output: Confusion matrix, competition score, accuracy, precision, recall and F1-score
 
 '''
 
@@ -39,7 +38,6 @@ class Models:
         Y_val_pred = lr.predict(self.X_validate)
         predicted_validation_labels = [LABELS[int(pred)] for pred in Y_val_pred]
         actual_validation_labels = [LABELS[int(pred)] for pred in self.Y_validate]
-        print(actual_validation_labels)
 
         validation_score, validation_confusion_matrix = score_submission(actual_validation_labels,
                                                                          predicted_validation_labels)
@@ -52,8 +50,9 @@ class Models:
         Y_test_pred = lr.predict(self.X_test)
         predicted_test_labels = [LABELS[int(pred)] for pred in Y_test_pred]
         actual_test_labels = [LABELS[int(pred)] for pred in self.Y_test]
+
+        # Prints the number of count stances in the dataset
         count_stances(actual_test_labels)
-        print(actual_test_labels)
 
         # CSV output
         write_to_csv(output + "/" + "lr_actual_labels.csv", actual_test_labels)
@@ -78,7 +77,6 @@ class Models:
         Y_val_pred = dt.predict(self.X_validate)
         predicted_validation_labels = [LABELS[int(pred)] for pred in Y_val_pred]
         actual_validation_labels = [LABELS[int(pred)] for pred in self.Y_validate]
-        print(actual_validation_labels)
 
         validation_score, validation_confusion_matrix = score_submission(actual_validation_labels,
                                                                          predicted_validation_labels)
@@ -106,41 +104,6 @@ class Models:
         print("Recall for DT:", recall)
         print("F1 Score for DT:", f1)
 
-    def get_knn(self):
-        knn = KNeighborsClassifier(n_neighbors=10)
-        knn.fit(self.X_train, self.Y_train)
-
-        # Validation results
-        Y_val_pred = knn.predict(self.X_validate)
-        predicted_validation_labels = [LABELS[int(pred)] for pred in Y_val_pred]
-        actual_validation_labels = [LABELS[int(pred)] for pred in self.Y_validate]
-
-        validation_score, validation_confusion_matrix = score_submission(actual_validation_labels,
-                                                                         predicted_validation_labels)
-        print_confusion_matrix(validation_confusion_matrix)
-
-        null_score, max_score = score_defaults(actual_validation_labels)
-        print("Percentage of validation score for K nearest neighbor is:", validation_score / float(max_score))
-
-        # Test results
-        Y_test_pred = knn.predict(self.X_test)
-        predicted_test_labels = [LABELS[int(pred)] for pred in Y_test_pred]
-        actual_test_labels = [LABELS[int(pred)] for pred in self.Y_test]
-
-        write_to_csv(output + "/" + "knn_actual_labels.csv", actual_test_labels)
-        write_to_csv(output + "/" + "knn_predicted_labels.csv", predicted_test_labels)
-
-        test_score, test_confusion_matrix = score_submission(actual_test_labels, predicted_test_labels)
-        print_confusion_matrix(test_confusion_matrix)
-        null_score, max_score = score_defaults(actual_test_labels)
-        print("Percentage of test score for K nearest neighbor is:", test_score / float(max_score))
-
-        precision, recall, f1 = metrics.performance_metrics(validation_confusion_matrix)
-
-        print("Precision for KNN: ", precision)
-        print("Recall for KNN:", recall)
-        print("F1 Score for KNN:", f1)
-
     def get_nb(self):
         nb = MultinomialNB(alpha=0.01, class_prior=None, fit_prior=True)
 
@@ -150,7 +113,6 @@ class Models:
         Y_val_pred = nb.predict(self.X_validate)
         predicted_validation_labels = [LABELS[int(pred)] for pred in Y_val_pred]
         actual_validation_labels = [LABELS[int(pred)] for pred in self.Y_validate]
-        print(actual_validation_labels)
 
         validation_score, validation_confusion_matrix = score_submission(actual_validation_labels,
                                                                          predicted_validation_labels)
@@ -187,7 +149,6 @@ class Models:
         Y_val_pred = rf.predict(self.X_validate)
         predicted_validation_labels = [LABELS[int(pred)] for pred in Y_val_pred]
         actual_validation_labels = [LABELS[int(pred)] for pred in self.Y_validate]
-        print(actual_validation_labels)
 
         validation_score, validation_confusion_matrix = score_submission(actual_validation_labels,
                                                                          predicted_validation_labels)
