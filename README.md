@@ -2,6 +2,10 @@
 
 Assignment - Fake news for the course COMP9417
 
+## Link to the project files
+
+[Fake news project files link](https://drive.google.com/drive/folders/1xkrwLVSroA4Otdr3p0FOygiaDXPWZRL2?usp=sharing)
+
 ## Running / Installation
 
 If you are running the code for the first time. Run the following commands in your python console.
