@@ -30,8 +30,8 @@ class Models:
         self.Y_test = Y_test
 
     def get_lr(self):
-        lr = LogisticRegression(C=0.1, random_state=66, multi_class="auto", class_weight='balanced', solver="lbfgs",
-                                max_iter=150)
+        lr = LogisticRegression(random_state=66, multi_class="auto", class_weight='balanced', solver="lbfgs",
+                                max_iter=340)
 
         lr.fit(self.X_train, self.Y_train)
 

@@ -71,9 +71,9 @@ if __name__ == "__main__":
     print("Data Splitting")
     train_validation_split = DataSplit(ids=ids, headline=train.headlineInstances, split_size=0.8)
     train_stances, validation_stances = train_validation_split.split()
-    train_stances = train_stances[:1000]
-    validation_stances = validation_stances[:1000]
-    test.headlineInstances = test.headlineInstances[:1000]
+    # train_stances = train_stances[:1000]
+    # validation_stances = validation_stances[:1000]
+    # test.headlineInstances = test.headlineInstances[:1000]
 
     # Preprocess the train
     print("Start of pre-processing for train")
@@ -126,7 +126,7 @@ if __name__ == "__main__":
 
         # Feature extraction and combining them for the models
         print("Feature extraction for train")
-        train_features = Features(train_preprocessed_headlines[:1000], train_preprocessed_bodies[:1000],
+        train_features = Features(train_preprocessed_headlines, train_preprocessed_bodies,
                                   train_headlines,
                                   train_bodies)
 
@@ -138,13 +138,13 @@ if __name__ == "__main__":
         train_sentence_weights = train_features.sentence_weighting()
 
         print("Feature extraction for validation")
-        validation_features = Features(validation_preprocessed_headlines[:1000], validation_preprocessed_bodies[:1000],
+        validation_features = Features(validation_preprocessed_headlines, validation_preprocessed_bodies,
                                        validation_headlines, validation_bodies)
         # Sentence weighting for validation
         validation_sentence_weights = validation_features.sentence_weighting()
 
         print("Feature extraction for test")
-        test_features = Features(test_preprocessed_headlines[:1000], test_preprocessed_bodies[:1000],
+        test_features = Features(test_preprocessed_headlines, test_preprocessed_bodies,
                                  test_headlines, test_bodies)
         # Sentence weighting for test
         test_sentence_weights = test_features.sentence_weighting()
@@ -175,8 +175,8 @@ if __name__ == "__main__":
 
     # Modelling the features
     print("Start of Modelling")
-    models = Models(final_train_features, final_validation_features, final_test_features, train_target_labels[:1000],
-                    validation_target_labels[:1000], test_target_labels[:1000])
+    models = Models(final_train_features, final_validation_features, final_test_features, train_target_labels,
+                    validation_target_labels, test_target_labels)
 
     models.get_lr()
     # models.get_dt()
