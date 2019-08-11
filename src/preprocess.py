@@ -6,14 +6,12 @@ import re
 '''
 This class does the pre-processing operations like tokenize, normalize and stem/ lemmatize
 done on the fake news dataset and returns the preprocessed clean data set.
-
-Will add comments later
  
-Input: 
+Input: The headline and body to be processed
 
-Output: 
+Output: It gives a tokenized clean output and the output can be viewed in the 
+preprocessed_data directory.
 '''
-
 
 class Preprocess:
 
