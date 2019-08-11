@@ -6,6 +6,10 @@ from sklearn.naive_bayes import MultinomialNB
 from sklearn.ensemble import RandomForestClassifier
 import src.metrics as metrics
 from src.utils import count_stances
+from src.utils import write_to_csv
+
+# Global attributes
+output = "output"
 
 '''
 
@@ -14,6 +18,7 @@ Input:
 Output:
 
 '''
+
 
 class Models:
     def __init__(self, X_train, X_validate, X_test, Y_train, Y_validate, Y_test):
@@ -48,6 +53,11 @@ class Models:
         predicted_test_labels = [LABELS[int(pred)] for pred in Y_test_pred]
         actual_test_labels = [LABELS[int(pred)] for pred in self.Y_test]
         count_stances(actual_test_labels)
+        print(actual_test_labels)
+
+        # CSV output
+        write_to_csv(output + "/" + "lr_actual_labels.csv", actual_test_labels)
+        write_to_csv(output + "/" + "lr_predicted_labels.csv", predicted_test_labels)
 
         test_score, test_confusion_matrix = score_submission(actual_test_labels, predicted_test_labels)
         print_confusion_matrix(test_confusion_matrix)
@@ -55,9 +65,9 @@ class Models:
         print("Percentage of test score for Logistic Regression is:", test_score / float(max_score))
 
         precision, recall, f1 = metrics.performance_metrics(validation_confusion_matrix)
-        print("Precision for NB: ", precision)
-        print("Recall for NB:", recall)
-        print("F1 Score for NB:", f1)
+        print("Precision for LR: ", precision)
+        print("Recall for LR:", recall)
+        print("F1 Score for LR:", f1)
 
     def get_dt(self):
         dt = DecisionTreeClassifier(random_state=66, max_depth=10)
@@ -82,6 +92,9 @@ class Models:
         predicted_test_labels = [LABELS[int(pred)] for pred in Y_test_pred]
         actual_test_labels = [LABELS[int(pred)] for pred in self.Y_test]
 
+        write_to_csv(output + "/" + "dt_actual_labels.csv", actual_test_labels)
+        write_to_csv(output + "/" + "dt_predicted_labels.csv", predicted_test_labels)
+
         test_score, test_confusion_matrix = score_submission(actual_test_labels, predicted_test_labels)
         print_confusion_matrix(test_confusion_matrix)
         null_score, max_score = score_defaults(actual_test_labels)
@@ -101,7 +114,6 @@ class Models:
         Y_val_pred = svm.predict(self.X_validate)
         predicted_validation_labels = [LABELS[int(pred)] for pred in Y_val_pred]
         actual_validation_labels = [LABELS[int(pred)] for pred in self.Y_validate]
-        print(actual_validation_labels)
 
         validation_score, validation_confusion_matrix = score_submission(actual_validation_labels,
                                                                          predicted_validation_labels)
@@ -114,6 +126,9 @@ class Models:
         Y_test_pred = svm.predict(self.X_test)
         predicted_test_labels = [LABELS[int(pred)] for pred in Y_test_pred]
         actual_test_labels = [LABELS[int(pred)] for pred in self.Y_test]
+
+        write_to_csv(output + "/" + "svm_actual_labels.csv", actual_test_labels)
+        write_to_csv(output + "/" + "svm_predicted_labels.csv", predicted_test_labels)
 
         test_score, test_confusion_matrix = score_submission(actual_test_labels, predicted_test_labels)
         print_confusion_matrix(test_confusion_matrix)
@@ -149,6 +164,9 @@ class Models:
         predicted_test_labels = [LABELS[int(pred)] for pred in Y_test_pred]
         actual_test_labels = [LABELS[int(pred)] for pred in self.Y_test]
 
+        write_to_csv(output + "/" + "nb_actual_labels.csv", actual_test_labels)
+        write_to_csv(output + "/" + "nb_predicted_labels.csv", predicted_test_labels)
+
         test_score, test_confusion_matrix = score_submission(actual_test_labels, predicted_test_labels)
         print_confusion_matrix(test_confusion_matrix)
         null_score, max_score = score_defaults(actual_test_labels)
@@ -182,6 +200,9 @@ class Models:
         Y_test_pred = rf.predict(self.X_test)
         predicted_test_labels = [LABELS[int(pred)] for pred in Y_test_pred]
         actual_test_labels = [LABELS[int(pred)] for pred in self.Y_test]
+
+        write_to_csv(output + "/" + "rf_actual_labels.csv", actual_test_labels)
+        write_to_csv(output + "/" + "rf_predicted_labels.csv", predicted_test_labels)
 
         test_score, test_confusion_matrix = score_submission(actual_test_labels, predicted_test_labels)
         print_confusion_matrix(test_confusion_matrix)
