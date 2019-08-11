@@ -1,7 +1,7 @@
 """
 COMP9417
 Assignment: Fake news Challenge
-Authors: Connor McLeod (z5058240), Shashank Reddy (z5222766), Leonard Lee(z5173917), Darren Zhang (z5113901)
+Authors: Connor McLeod (z5058240), Shashank Reddy Boosi(z5222766), Leonard Lee(z5173917), Darren Zhang (z5113901)
 main.py: Main file for program execution
 """
 
@@ -153,7 +153,6 @@ if __name__ == "__main__":
         output_file(final_validation_features, base_feature_path + "/" + "validation_features.p")
         final_test_features = sp.bmat([[test_tfidf_weights, test_sentence_weights.T]]).A
         output_file(final_test_features, base_feature_path + "/" + "test_features.p")
-        print(final_train_features.shape)
     else:
         print("Feature Extraction")
         final_train_features = input_file(base_feature_path + "/" + "train_features.p")
