@@ -26,12 +26,12 @@ class Features:
         return sp.coo_matrix(cosine_similarity(tfidf_weights, tfidf_weights))
 
     def tfidf_extraction(self, validation_headlines, validation_bodies, test_headlines, test_bodies):
-        tf_headline_vectorizer = TfidfVectorizer(ngram_range=(1, 3), stop_words="english", lowercase=True,
-                                                 max_features=5000)
+        tf_headline_vectorizer = TfidfVectorizer(ngram_range=(1, 2), stop_words="english", lowercase=True,
+                                                 max_features=10000)
         tf_train_headline = tf_headline_vectorizer.fit_transform(self.headline)
 
-        tf_body_vectorizer = TfidfVectorizer(ngram_range=(1, 3), stop_words="english", lowercase=True,
-                                             max_features=5000)
+        tf_body_vectorizer = TfidfVectorizer(ngram_range=(1, 2), stop_words="english", lowercase=True,
+                                             max_features=10000)
         tf_train_body = tf_body_vectorizer.fit_transform(self.body)
 
         tf_validation_headline = tf_headline_vectorizer.transform(validation_headlines)
