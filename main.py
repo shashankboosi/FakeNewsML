@@ -14,7 +14,9 @@ from src.models import Models
 from src.score import LABELS
 from src.utils import input_file, output_file
 import scipy.sparse as sp
-from sklearn.metrics import accuracy_score
+from src.utils import read_from_csv
+import numpy as np
+
 import os
 import time
 
@@ -31,6 +33,7 @@ body = "articleBody"
 headline = "Headline"
 base_preprocess_path = "preprocessed_data"
 base_feature_path = "final_features"
+output = "output"
 
 
 def target_labels(stances):
@@ -177,10 +180,14 @@ if __name__ == "__main__":
                     validation_target_labels[:1000], test_target_labels[:1000])
 
     models.get_lr()
-    models.get_dt()
-    models.get_nb()
-    models.get_rf()
-    models.get_svm()
+    # models.get_dt()
+    # models.get_nb()
+    # models.get_rf()
+    # models.get_svm()
+
+    lr_actual_labels = read_from_csv(output + "/" + "lr_actual_labels.csv")
+    lr_predicted_labels = read_from_csv(output + "/" + "lr_predicted_labels.csv")
+    print(len(lr_actual_labels))
 
     t2 = time.time()
     print("Time for the total is:", t2 - t0)
