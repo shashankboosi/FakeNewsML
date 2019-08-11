@@ -51,9 +51,11 @@ used, to evaluate the results.
 ### Results and Comparisons
 
 1) Percentage of correctness for different stances for all the 5 algorithms we compare with:
+
 ![correctness](images/correctness.png)
     
 2) The accuracy - score chart for the dataset is: 
+
 ![accuracy-score](images/acctoscore.PNG)
 
 ### Report
