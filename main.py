@@ -129,14 +129,11 @@ if __name__ == "__main__":
         # TF-IDF weight extraction
         train_tfidf_weights, validation_tfidf_weights, test_tfidf_weights = train_features.tfidf_extraction(
             validation_headlines, validation_bodies, test_headlines, test_bodies)
-        print(train_tfidf_weights.shape)
 
         # Sentence weighting for train
         train_sentence_weights = train_features.sentence_weighting()
-        print(train_sentence_weights.shape)
         # Cosine Similarity for train
         train_cos_sim_weights = train_features.cosine_sim(train_tfidf_weights.toarray())
-        print(train_cos_sim_weights.shape)
 
         print("Feature extraction for validation")
         validation_features = Features(validation_preprocessed_headlines[:1000], validation_preprocessed_bodies[:1000],
@@ -164,6 +161,7 @@ if __name__ == "__main__":
         output_file(final_test_features, base_feature_path + "/" + "test_features.p")
         print(final_train_features.shape)
     else:
+        print("Feature Extraction")
         final_train_features = input_file(base_feature_path + "/" + "train_features.p")
         final_validation_features = input_file(base_feature_path + "/" + "validation_features.p")
         final_test_features = input_file(base_feature_path + "/" + "test_features.p")
@@ -182,7 +180,11 @@ if __name__ == "__main__":
     models = Models(final_train_features, final_validation_features, final_test_features, train_target_labels[:1000],
                     validation_target_labels[:1000], test_target_labels[:1000])
 
-    models.get_nb()
+    # models.get_lr()
+    # models.get_dt()
+    # models.get_nb()
+    # models.get_rf()
+    models.get_svm()
 
     t2 = time.time()
     print("Time for the total is:", t2 - t0)
