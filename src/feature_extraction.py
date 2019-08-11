@@ -2,6 +2,15 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 import scipy.sparse as sp
 
+'''
+Feature extractions like sentence weighting, ngram, tf-idf is created
+
+Input: Tokenized and non-tokenized headlines and bodies
+
+Output: Returns the feature vectors based on the feature we choose.
+
+'''
+
 
 # This function describes the feature transformation for the data
 class Features:
