@@ -179,10 +179,10 @@ if __name__ == "__main__":
                     validation_target_labels, test_target_labels)
 
     models.get_lr()
-    # models.get_dt()
-    # models.get_nb()
-    # models.get_rf()
-    # models.get_svm()
+    models.get_dt()
+    models.get_nb()
+    models.get_rf()
+    models.get_knn()
 
     lr_actual_labels = read_from_csv(output + "/" + "lr_actual_labels.csv")
     lr_predicted_labels = read_from_csv(output + "/" + "lr_predicted_labels.csv")
