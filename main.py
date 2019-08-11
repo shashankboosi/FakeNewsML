@@ -1,7 +1,7 @@
 """
 COMP9417
-Assignment
-Authors: Connor McLeod (z5058240), name (zid), name (zid), name (zid)
+Assignment: Fake news Challenge
+Authors: Connor McLeod (z5058240), Shashank Reddy (z5222766), Leonard Lee(z5173917), Darren Zhang (z5113901)
 main.py: Main file for program execution
 """
 
@@ -14,7 +14,6 @@ from src.models import Models
 from src.score import LABELS
 from src.utils import input_file, output_file
 import scipy.sparse as sp
-from src.utils import read_from_csv
 
 import os
 import time
@@ -54,12 +53,15 @@ def headlines_bodies(temp_headline, temp_body):
 
 
 '''
-The main function should call the classes that we declare and
-the operations should happen in the main function and the logic should 
-be written in their respective python files
+This files combine all the data mining part starting from Data importing, spliting,
+pre processing, feature transformation, modelling and visualization.
+
+Check README for clear understanding of what is happening.
+
 '''
 if __name__ == "__main__":
 
+    t0 = time.time()
     # Importing the data
     train = FakeNewsData(trainStancePath, trainBodyPath)
     test = FakeNewsData(testStancePath, testBodyPath)
@@ -71,9 +73,6 @@ if __name__ == "__main__":
     print("Data Splitting")
     train_validation_split = DataSplit(ids=ids, headline=train.headlineInstances, split_size=0.8)
     train_stances, validation_stances = train_validation_split.split()
-    # train_stances = train_stances[:1000]
-    # validation_stances = validation_stances[:1000]
-    # test.headlineInstances = test.headlineInstances[:1000]
 
     # Preprocess the train
     print("Start of pre-processing for train")
@@ -114,13 +113,12 @@ if __name__ == "__main__":
         test_preprocessed_headlines = input_file(base_preprocess_path + "/" + "test_headlines.p")
         test_preprocessed_bodies = input_file(base_preprocess_path + "/" + "test_bodies.p")
 
-    t0 = time.time()
     # Split headlines and bodies for train, validation and test
     train_headlines, train_bodies = headlines_bodies(train_stances, train.articleBody)
     validation_headlines, validation_bodies = headlines_bodies(validation_stances, train.articleBody)
     test_headlines, test_bodies = headlines_bodies(test.headlineInstances, test.articleBody)
 
-    if not (os.path.exists(base_feature_path + "/" + "final_features.p") and os.path.exists(
+    if not (os.path.exists(base_feature_path + "/" + "train_features.p") and os.path.exists(
             base_feature_path + "/" + "validation_features.p") and os.path.exists(
         base_feature_path + "/" + "test_features.p")):
 
@@ -150,12 +148,11 @@ if __name__ == "__main__":
         test_sentence_weights = test_features.sentence_weighting()
 
         # Combine the features to prepare them as an inout for the models
-        final_train_features = sp.hstack([train_tfidf_weights, train_sentence_weights.T]).A
+        final_train_features = sp.bmat([[train_tfidf_weights, train_sentence_weights.T]]).A
         output_file(final_train_features, base_feature_path + "/" + "train_features.p")
-        final_validation_features = sp.hstack(
-            [validation_tfidf_weights, validation_sentence_weights.T]).A
+        final_validation_features = sp.bmat([[validation_tfidf_weights, validation_sentence_weights.T]]).A
         output_file(final_validation_features, base_feature_path + "/" + "validation_features.p")
-        final_test_features = sp.hstack([test_tfidf_weights, test_sentence_weights.T]).A
+        final_test_features = sp.bmat([[test_tfidf_weights, test_sentence_weights.T]]).A
         output_file(final_test_features, base_feature_path + "/" + "test_features.p")
         print(final_train_features.shape)
     else:
@@ -178,20 +175,18 @@ if __name__ == "__main__":
     models = Models(final_train_features, final_validation_features, final_test_features, train_target_labels,
                     validation_target_labels, test_target_labels)
 
+    # Calling the 4 models
     models.get_lr()
     models.get_dt()
     models.get_nb()
     models.get_rf()
-    models.get_knn()
 
-    lr_actual_labels = read_from_csv(output + "/" + "lr_actual_labels.csv")
-    lr_predicted_labels = read_from_csv(output + "/" + "lr_predicted_labels.csv")
-    print(len(lr_actual_labels))
+    '''
+    Used read_from_csv in utils to know the actual labels and the predicted labels
+    to produce the correctness visualizations graphs for the report.
+    '''
 
     t2 = time.time()
     print("Time for the total is:", t2 - t0)
-
-    # connors_model()
-    # your_model_goes_here
 
     print("\nEnd of tests\n")
