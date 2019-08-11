@@ -4,8 +4,7 @@ Assignment - Fake news
 
 ## Running / Installation
 
-If you are running the code for the first time. Run the following commands in your python console
-
+If you are running the code for the first time. Run the following commands in your python console.
 1) 
 
         -> import nltk
@@ -19,6 +18,8 @@ If you are running the code for the first time. Run the following commands in yo
 
 4) If you want to experiment with the pre processing and feature extraction results
 you can delete the contents in the folders `preprocessed_data` and `final_features`.
+
+5) You need to run the `main.py` for the whole project to execute.
 
 ### Implementation
 
