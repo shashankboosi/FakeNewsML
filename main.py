@@ -29,7 +29,8 @@ primary_id = "Body ID"
 stance = "Stance"
 body = "articleBody"
 headline = "Headline"
-base_path = "preprocessed_data"
+base_preprocess_path = "preprocessed_data"
+base_feature_path = "final_features"
 
 
 def target_labels(stances):
@@ -68,96 +69,98 @@ if __name__ == "__main__":
     print("Data Splitting")
     train_validation_split = DataSplit(ids=ids, headline=train.headlineInstances, split_size=0.8)
     train_stances, validation_stances = train_validation_split.split()
-    train_stances = train_stances[:10000]
-    validation_stances = validation_stances[:]
-    test.headlineInstances = test.headlineInstances[:10000]
+    train_stances = train_stances[:1000]
+    validation_stances = validation_stances[:1000]
+    test.headlineInstances = test.headlineInstances[:1000]
 
     # Preprocess the train
     print("Start of pre-processing for train")
-    if not (os.path.exists(base_path + "/" + "training_headlines.p") and os.path.exists(
-            base_path + "/" + "training_bodies.p")):
+    if not (os.path.exists(base_preprocess_path + "/" + "training_headlines.p") and os.path.exists(
+            base_preprocess_path + "/" + "training_bodies.p")):
         preprocessed_train_data = Preprocess(headline=train_stances, body=train.articleBody,
                                              preprocess_type="lemma")
         train_preprocessed_headlines, train_preprocessed_bodies = preprocessed_train_data.get_clean_headlines_and_bodies()
-        output_file(train_preprocessed_headlines, base_path + "/" + "training_headlines.p")
-        output_file(train_preprocessed_bodies, base_path + "/" + "training_bodies.p")
+        output_file(train_preprocessed_headlines, base_preprocess_path + "/" + "training_headlines.p")
+        output_file(train_preprocessed_bodies, base_preprocess_path + "/" + "training_bodies.p")
     else:
-        train_preprocessed_headlines = input_file(base_path + "/" + "training_headlines.p")
-        train_preprocessed_bodies = input_file(base_path + "/" + "training_bodies.p")
+        train_preprocessed_headlines = input_file(base_preprocess_path + "/" + "training_headlines.p")
+        train_preprocessed_bodies = input_file(base_preprocess_path + "/" + "training_bodies.p")
 
     # Preprocess the validation
     print("Start of pre-processing for validation")
-    if not (os.path.exists(base_path + "/" + "validation_headlines.p") and os.path.exists(
-            base_path + "/" + "validation_bodies.p")):
+    if not (os.path.exists(base_preprocess_path + "/" + "validation_headlines.p") and os.path.exists(
+            base_preprocess_path + "/" + "validation_bodies.p")):
         preprocessed_validation_data = Preprocess(headline=validation_stances, body=train.articleBody,
                                                   preprocess_type="lemma")
         validation_preprocessed_headlines, validation_preprocessed_bodies = preprocessed_validation_data.get_clean_headlines_and_bodies()
-        output_file(validation_preprocessed_headlines, base_path + "/" + "validation_headlines.p")
-        output_file(validation_preprocessed_bodies, base_path + "/" + "validation_bodies.p")
+        output_file(validation_preprocessed_headlines, base_preprocess_path + "/" + "validation_headlines.p")
+        output_file(validation_preprocessed_bodies, base_preprocess_path + "/" + "validation_bodies.p")
     else:
-        validation_preprocessed_headlines = input_file(base_path + "/" + "validation_headlines.p")
-        validation_preprocessed_bodies = input_file(base_path + "/" + "validation_bodies.p")
+        validation_preprocessed_headlines = input_file(base_preprocess_path + "/" + "validation_headlines.p")
+        validation_preprocessed_bodies = input_file(base_preprocess_path + "/" + "validation_bodies.p")
 
     # Preprocess the test
     print("Start of pre-processing for test")
-    if not (os.path.exists(base_path + "/" + "test_headlines.p") and os.path.exists(
-            base_path + "/" + "test_bodies.p")):
+    if not (os.path.exists(base_preprocess_path + "/" + "test_headlines.p") and os.path.exists(
+            base_preprocess_path + "/" + "test_bodies.p")):
         preprocessed_test_data = Preprocess(headline=test.headlineInstances, body=test.articleBody,
                                             preprocess_type="lemma")
         test_preprocessed_headlines, test_preprocessed_bodies = preprocessed_test_data.get_clean_headlines_and_bodies()
-        output_file(test_preprocessed_headlines, base_path + "/" + "test_headlines.p")
-        output_file(test_preprocessed_bodies, base_path + "/" + "test_bodies.p")
+        output_file(test_preprocessed_headlines, base_preprocess_path + "/" + "test_headlines.p")
+        output_file(test_preprocessed_bodies, base_preprocess_path + "/" + "test_bodies.p")
     else:
-        test_preprocessed_headlines = input_file(base_path + "/" + "test_headlines.p")
-        test_preprocessed_bodies = input_file(base_path + "/" + "test_bodies.p")
+        test_preprocessed_headlines = input_file(base_preprocess_path + "/" + "test_headlines.p")
+        test_preprocessed_bodies = input_file(base_preprocess_path + "/" + "test_bodies.p")
 
-    t0= time.time()
+    t0 = time.time()
     # Split headlines and bodies for train, validation and test
     train_headlines, train_bodies = headlines_bodies(train_stances, train.articleBody)
     validation_headlines, validation_bodies = headlines_bodies(validation_stances, train.articleBody)
     test_headlines, test_bodies = headlines_bodies(test.headlineInstances, test.articleBody)
 
-    # Feature extraction and combining them for the models
-    print("Feature extraction for train")
-    train_features = Features(train_preprocessed_headlines[:10000], train_preprocessed_bodies[:10000], train_headlines, train_bodies)
+    if not (os.path.exists(base_feature_path + "/" + "final_features.p") and os.path.exists(
+            base_feature_path + "/" + "validation_features.p") and os.path.exists(
+        base_feature_path + "/" + "test_features.p")):
 
-    # TF-IDF weight extraction
-    train_tfidf_weights, validation_tfidf_weights, test_tfidf_weights = train_features.tfidf_extraction(
-        validation_headlines, validation_bodies, test_headlines, test_bodies)
-    print(train_tfidf_weights.shape)
+        # Feature extraction and combining them for the models
+        print("Feature extraction for train")
+        train_features = Features(train_preprocessed_headlines[:1000], train_preprocessed_bodies[:1000],
+                                  train_headlines,
+                                  train_bodies)
 
-    # Sentence weighting for train
-    train_sentence_weights = train_features.sentence_weighting()
-    print(train_sentence_weights.shape)
-    # Cosine Similarity for train
-    train_cos_sim_weights = train_features.cosine_sim(train_tfidf_weights.toarray())
-    print(train_cos_sim_weights.shape)
+        # TF-IDF weight extraction
+        train_tfidf_weights, validation_tfidf_weights, test_tfidf_weights = train_features.tfidf_extraction(
+            validation_headlines, validation_bodies, test_headlines, test_bodies)
 
-    print("Feature extraction for validation")
-    validation_features = Features(validation_preprocessed_headlines[:], validation_preprocessed_bodies[:],
-                                   validation_headlines, validation_bodies)
-    # Sentence weighting for validation
-    validation_sentence_weights = validation_features.sentence_weighting()
-    # Cosine Similarity for validation
-    validation_cos_sim_weights = validation_features.cosine_sim(validation_tfidf_weights)
+        # Sentence weighting for train
+        train_sentence_weights = train_features.sentence_weighting()
 
-    print("Feature extraction for test")
-    test_features = Features(test_preprocessed_headlines[:10000], test_preprocessed_bodies[:10000],
-                             test_headlines, test_bodies)
-    # Sentence weighting for test
-    test_sentence_weights = test_features.sentence_weighting()
-    # Cosine Similarity for test
-    test_cos_sim_weights = test_features.cosine_sim(test_tfidf_weights)
+        print("Feature extraction for validation")
+        validation_features = Features(validation_preprocessed_headlines[:1000], validation_preprocessed_bodies[:1000],
+                                       validation_headlines, validation_bodies)
+        # Sentence weighting for validation
+        validation_sentence_weights = validation_features.sentence_weighting()
 
-    # Combine the features to prepare them as an inout for the models
-    final_train_features = sp.hstack([train_tfidf_weights, train_sentence_weights.T, train_cos_sim_weights]).A
-    output_file()
-    final_validation_features = sp.hstack(
-        [validation_tfidf_weights, validation_sentence_weights.T, validation_cos_sim_weights]).A
-    final_test_features = sp.hstack([test_tfidf_weights, test_sentence_weights.T, test_cos_sim_weights]).A
-    print(final_train_features.shape)
+        print("Feature extraction for test")
+        test_features = Features(test_preprocessed_headlines[:1000], test_preprocessed_bodies[:1000],
+                                 test_headlines, test_bodies)
+        # Sentence weighting for test
+        test_sentence_weights = test_features.sentence_weighting()
 
-
+        # Combine the features to prepare them as an inout for the models
+        final_train_features = sp.hstack([train_tfidf_weights, train_sentence_weights.T]).A
+        output_file(final_train_features, base_feature_path + "/" + "train_features.p")
+        final_validation_features = sp.hstack(
+            [validation_tfidf_weights, validation_sentence_weights.T]).A
+        output_file(final_validation_features, base_feature_path + "/" + "validation_features.p")
+        final_test_features = sp.hstack([test_tfidf_weights, test_sentence_weights.T]).A
+        output_file(final_test_features, base_feature_path + "/" + "test_features.p")
+        print(final_train_features.shape)
+    else:
+        print("Feature Extraction")
+        final_train_features = input_file(base_feature_path + "/" + "train_features.p")
+        final_validation_features = input_file(base_feature_path + "/" + "validation_features.p")
+        final_test_features = input_file(base_feature_path + "/" + "test_features.p")
 
     t1 = time.time()
 
@@ -170,10 +173,14 @@ if __name__ == "__main__":
 
     # Modelling the features
     print("Start of Modelling")
-    models = Models(final_train_features, final_validation_features, final_test_features, train_target_labels[:10000],
-                    validation_target_labels[:], test_target_labels[:10000])
+    models = Models(final_train_features, final_validation_features, final_test_features, train_target_labels[:1000],
+                    validation_target_labels[:1000], test_target_labels[:1000])
 
     models.get_lr()
+    models.get_dt()
+    models.get_nb()
+    models.get_rf()
+    models.get_svm()
 
     t2 = time.time()
     print("Time for the total is:", t2 - t0)
@@ -182,4 +189,3 @@ if __name__ == "__main__":
     # your_model_goes_here
 
     print("\nEnd of tests\n")
-
