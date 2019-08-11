@@ -1,6 +1,6 @@
 # 9417_MachineLearning
 
-Assignment - Fake news
+Assignment - Fake news for the course COMP9417
 
 ## Running / Installation
 
@@ -46,8 +46,6 @@ train and 20 % validation to check the results before testing them on the test d
 7) `score.py` - This is the official scorer python file that is to be
 used, to evaluate the results.
 
-
-        
 ### Results and Comparisons
 
 1) Percentage of correctness for different stances for all the 5 algorithms we compare with:
