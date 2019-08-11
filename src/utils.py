@@ -33,3 +33,21 @@ def count_stances(data):
     print("Disagree", disagree)
     print("Discuss", discuss)
     print("Unrelated", unrelated)
+
+
+def write_to_csv(filename, content):
+    with open(filename, mode='w') as file:
+        csv_writer = csv.writer(file, quoting=csv.QUOTE_ALL)
+        csv_writer.writerow(content)
+    print(filename, " created")
+    file.close()
+    return filename
+
+
+def read_from_csv(filename):
+    with open(filename, mode='r') as file:
+        csv_reader = csv.reader(file)
+        results = list(csv_reader)
+
+    file.close()
+    return results[0]
