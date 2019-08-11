@@ -1,5 +1,16 @@
 import numpy as np
 
+'''
+Metrics used for evaluation the models
+
+Input: Confusion matrix produced from the official score.py
+from the authors of the challenge
+
+Output: Precision, recall and the f1-score for agree, disagree, discuss and
+unrelated.
+
+'''
+
 
 def performance_metrics(cm):
     TP = np.diag(cm)
