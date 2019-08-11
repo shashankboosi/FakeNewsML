@@ -54,7 +54,7 @@ used, to evaluate the results.
 ![correctness](images/correctness.png)
     
 2) The accuracy - score chart for the dataset is: 
-![accuracy-score](images/acctoscore.png)
+![accuracy-score](images/acctoscore.PNG)
 
 ### Report
 For detailed information about the repository please find the pdf attached in `report/report.pdf`
