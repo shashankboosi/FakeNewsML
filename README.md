@@ -2,9 +2,9 @@
 
 Assignment - Fake news for the course COMP9417
 
-## Link to the project files
+## Dataset
 
-[Fake news project files link](https://drive.google.com/drive/folders/1xkrwLVSroA4Otdr3p0FOygiaDXPWZRL2?usp=sharing)
+[Fake News Challenge Dataset](http://www.fakenewschallenge.org/)
 
 ## Running / Installation
 
