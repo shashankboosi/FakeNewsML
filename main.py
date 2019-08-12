@@ -1,7 +1,7 @@
 """
 COMP9417
 Assignment: Fake news Challenge
-Authors: Connor McLeod (z5058240), Shashank Reddy Boosi(z5222766), Leonard Lee(z5173917), Darren Zhang (z5113901)
+Authors: Shashank Reddy Boosi(z5222766), Connor McLeod (z5058240), Leonard Lee(z5173917), Darren Zhang (z5113901)
 main.py: Main file for program execution
 """
 
