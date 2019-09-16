@@ -1,6 +1,6 @@
 # 9417_MachineLearning
 
-Assignment - Fake news for the course COMP9417
+Assignment - Fake news challenge using ML/DL
 
 ## Dataset
 
