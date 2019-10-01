@@ -9,6 +9,7 @@ Assignment - Fake news challenge using ML/DL
 ## Running / Installation
 
 If you are running the code for the first time. Run the following commands in your python console.
+
 1) 
 
         -> import nltk
