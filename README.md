@@ -1,6 +1,6 @@
-# 9417_MachineLearning
+# Fake News ML
 
-Assignment - Fake news challenge using ML/DL
+Fake news challenge using ML/DL
 
 ## Dataset
 
